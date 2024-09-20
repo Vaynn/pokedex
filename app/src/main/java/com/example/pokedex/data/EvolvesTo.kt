@@ -1,0 +1,15 @@
+package com.example.pokedex.data
+
+
+import com.google.gson.annotations.SerializedName
+
+data class EvolvesTo(
+    @SerializedName("evolution_details")
+    val evolutionDetails: List<EvolutionDetail>,
+    @SerializedName("evolves_to")
+    val evolvesTo: List<EvolvesToX>,
+    @SerializedName("is_baby")
+    val isBaby: Boolean,
+    @SerializedName("species")
+    val species: SpeciesXXX
+)
