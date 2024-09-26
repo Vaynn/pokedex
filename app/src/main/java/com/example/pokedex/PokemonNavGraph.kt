@@ -32,8 +32,8 @@ fun PokemonNavGraph(
     NavHost(navController = navController, startDestination = NavRoutes.HOME, modifier = modifier) {
         composable(NavRoutes.HOME){
             HomeScreen(onPokemonClick = { pokemonId, pokemonColor ->
-                viewModel.updatePokemonColor(pokemonColor)
                 navController.navigate(NavRoutes.pokemonDetail(pokemonId))
+                viewModel.updatePokemonColor(pokemonColor)
             })
         }
 
@@ -42,7 +42,16 @@ fun PokemonNavGraph(
             arguments = listOf(navArgument("pokemonId") { type = NavType.IntType })
         ) {backStackEntry ->
             val pokemonId = backStackEntry.arguments?.getInt("pokemonId") ?: return@composable
-            PokemonDetailScreen(pokemonId = pokemonId)
+            PokemonDetailScreen(
+                pokemonId = pokemonId,
+                navController = navController,
+                onPokemonClick = { pokemonId, pokemonColor ->
+                    navController.navigate(NavRoutes.pokemonDetail(pokemonId)){
+                        popUpTo(NavRoutes.HOME) { inclusive = false }
+                    }
+                    viewModel.updatePokemonColor(pokemonColor)
+                }
+            )
         }
     }
 }

@@ -23,11 +23,17 @@ interface PokeApiService {
     @GET("pokemon/{id}")
     suspend fun getPokemonDetails(@Path("id") id: Int): Response<Pokemon>
 
+    @GET("pokemon/{name}")
+    suspend fun getPokemonDetailsByName(@Path("name") name: String): Response<Pokemon>
+
     @GET
     suspend fun getPokemonDetailsByUrl(@Url url: String): Response<Pokemon>
 
     @GET("pokemon-species/{id}")
     suspend fun getPokemonSpecies(@Path("id") id: Int): Response<PokemonSpecy>
+
+    @GET("pokemon-species/{name}")
+    suspend fun getPokemonSpeciesByName(@Path("name") name: String): Response<PokemonSpecy>
 
     @GET("generation/{id}")
     suspend fun getPokemonGeneration(@Path("id") id: Int): Response<Generation>

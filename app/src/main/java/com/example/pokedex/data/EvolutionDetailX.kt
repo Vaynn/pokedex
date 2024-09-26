@@ -37,7 +37,7 @@ data class EvolutionDetailX(
     @SerializedName("trade_species")
     val tradeSpecies: Any,
     @SerializedName("trigger")
-    val trigger: TriggerX,
+    val trigger: Trigger,
     @SerializedName("turn_upside_down")
     val turnUpsideDown: Boolean
 )

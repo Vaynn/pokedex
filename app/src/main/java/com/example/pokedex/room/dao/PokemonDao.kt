@@ -15,4 +15,7 @@ interface PokemonDao {
     @Query("SELECT * FROM pokemon_table WHERE generation = :generation LIMIT :limit OFFSET :offset")
     suspend fun getPokemonByGeneration(generation: Int, limit: Int, offset: Int): List<PokemonEntity>
 
+    @Query("SELECT * FROM pokemon_table WHERE name = :name")
+    suspend fun getPokemonByName(name: String): PokemonEntity?
+
 }

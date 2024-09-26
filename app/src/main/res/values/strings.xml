@@ -7,9 +7,10 @@
     <string name="generation">Generation</string>
     <string name="about">About</string>
     <string name="base_stats">Stats</string>
-    <string name="evolution">Evolution</string>
+    <string name="evolution">Evolutions</string>
     <string name="moves">Moves</string>
     <string name="weight">Weight</string>
     <string name="shiny_form">SHINY FORM</string>
     <string name="total">TOTAL</string>
+    <string name="arrow">arrow</string>
 </resources>
