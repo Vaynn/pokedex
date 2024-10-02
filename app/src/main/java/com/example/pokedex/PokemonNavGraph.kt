@@ -1,6 +1,7 @@
 package com.example.pokedex
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -32,8 +33,8 @@ fun PokemonNavGraph(
     NavHost(navController = navController, startDestination = NavRoutes.HOME, modifier = modifier) {
         composable(NavRoutes.HOME){
             HomeScreen(onPokemonClick = { pokemonId, pokemonColor ->
-                navController.navigate(NavRoutes.pokemonDetail(pokemonId))
                 viewModel.updatePokemonColor(pokemonColor)
+                    navController.navigate(NavRoutes.pokemonDetail(pokemonId))
             })
         }
 
@@ -46,10 +47,11 @@ fun PokemonNavGraph(
                 pokemonId = pokemonId,
                 navController = navController,
                 onPokemonClick = { pokemonId, pokemonColor ->
+                    viewModel.updatePokemonColor(pokemonColor)
                     navController.navigate(NavRoutes.pokemonDetail(pokemonId)){
                         popUpTo(NavRoutes.HOME) { inclusive = false }
                     }
-                    viewModel.updatePokemonColor(pokemonColor)
+
                 }
             )
         }

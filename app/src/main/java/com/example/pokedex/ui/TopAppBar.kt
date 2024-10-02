@@ -20,6 +20,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
@@ -41,8 +43,9 @@ fun PokeTopAppBar(
     backgroundColor: Brush,
     modifier: Modifier = Modifier){
 
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val currentBackGroundColor by rememberUpdatedState(backgroundColor)
 
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
         TopAppBar(
             title = {
                 Text(
@@ -82,7 +85,7 @@ fun PokeTopAppBar(
             scrollBehavior = scrollBehavior,
             modifier = modifier
                 .fillMaxWidth()
-                .background(backgroundColor)
+                .background(currentBackGroundColor)
                 .windowInsetsPadding(WindowInsets.statusBars)
         )
 

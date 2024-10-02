@@ -46,11 +46,15 @@ class HomeViewModel @Inject constructor(
     private val _selectedGeneration = MutableStateFlow(0)
     val selectedGeneration: StateFlow<Int> = _selectedGeneration
 
+    private val _isRegionFilterReady = MutableStateFlow(false)
+    val isRegionFilterReady: StateFlow<Boolean> = _isRegionFilterReady
+
     init {
         viewModelScope.launch {
             repository.preloadGenerationData()
             _generationRegionMap.value = repository.getRegionGenerationMap()
             loadPokemonsForGeneration(currentGeneration)
+
         }
     }
 
@@ -66,6 +70,7 @@ class HomeViewModel @Inject constructor(
             _pokemonList.value = pokemons
             currentPage++
             _loading.value = false
+            _isRegionFilterReady.value = true
         }
     }
     fun loadNextPage() {

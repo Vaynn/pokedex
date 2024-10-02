@@ -13,4 +13,5 @@
     <string name="shiny_form">SHINY FORM</string>
     <string name="total">TOTAL</string>
     <string name="arrow">arrow</string>
+    <string name="no_evolution">No further evolution is known for this Pokémon.</string>
 </resources>

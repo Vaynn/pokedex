@@ -69,6 +69,7 @@ dependencies {
     implementation(libs.hilt.navigation.compose)
     implementation(libs.coil.compose)
     implementation(libs.coil.svg)
+    implementation(libs.coil.gif)
     implementation(libs.room.ktx)
     implementation(libs.room.runtime)
     testImplementation(libs.mockito)

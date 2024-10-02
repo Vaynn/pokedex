@@ -6,6 +6,7 @@ val PokedexRed = Color(0xFFD32F2F) // Rouge Pokedex, utilisé pour l'accent prin
 val PokedexRedTransparant = Color(0x33D32F2F)
 val PokedexRedDarkTransparant = Color(0x88D32F2F)
 val WaterBlue = Color(0xFF1976D2)  // Bleu Eau, utilisé pour les fonctionnalités secondaires
+val WaterBlueTransparent = Color(0x881976D2)  // Bleu Eau, utilisé pour les fonctionnalités secondaires
 val GrassGreen = Color(0xFF388E3C) // Vert Herbe, pour les éléments de confirmation ou de succès
 
 // Couleurs secondaires

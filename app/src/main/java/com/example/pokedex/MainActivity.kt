@@ -7,7 +7,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -31,11 +35,17 @@ class MainActivity : ComponentActivity() {
                 val  navController = rememberNavController()
                 val selectedColor by sharedViewModel.selectedPokemonColor
                 val currentDestination by navController.currentBackStackEntryAsState()
+                val showBackButton = rememberSaveable { mutableStateOf(false) }
+
+                LaunchedEffect(currentDestination) {
+                    showBackButton.value = currentDestination?.destination?.route != NavRoutes.HOME
+                }
+
                 Scaffold(
                     topBar = {
                         PokeTopAppBar(
                             title = getString(R.string.app_name),
-                            showBackButton = currentDestination?.destination?.route != NavRoutes.HOME,
+                            showBackButton = showBackButton.value,
                             backgroundColor = selectedColor,
                             onBackClick = {
                                 sharedViewModel.updatePokemonColor(MetalRedGradient)

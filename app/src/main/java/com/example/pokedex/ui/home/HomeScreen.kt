@@ -1,5 +1,6 @@
 package com.example.pokedex.ui.home
 
+import android.os.Build.VERSION.SDK_INT
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -51,6 +52,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -63,6 +65,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.ImageLoader
 import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
+import coil.compose.rememberAsyncImagePainter
+import coil.decode.GifDecoder
+import coil.decode.ImageDecoderDecoder
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 import com.example.pokedex.PokemonSharedViewModel
@@ -72,6 +78,7 @@ import com.example.pokedex.models.PokemonGridItem
 import com.example.pokedex.models.PokemonPreview
 import com.example.pokedex.models.PokemonRegion
 import com.example.pokedex.room.entity.PokemonEntity
+import com.example.pokedex.ui.LoadingPokeball
 import com.example.pokedex.ui.theme.ElectricYellow
 import com.example.pokedex.ui.theme.PokedexRed
 import com.example.pokedex.ui.theme.PokedexRedDarkTransparant
@@ -97,6 +104,12 @@ fun HomeScreen(
         mutableStateOf<Int? >(null)
     }
     val hasReachedEnd by viewModel.hasReachedEnd.collectAsState()
+    val isRegionFilterReady by viewModel.isRegionFilterReady.collectAsState()
+
+    if (!isRegionFilterReady) {
+       LoadingPokeball()
+        return
+    }
 
     Column(modifier = modifier.fillMaxSize()) {
         RegionFilterRow(
@@ -130,16 +143,17 @@ fun HomeScreen(
                 pokemonList,
                 key = { it.id }
             ) { pokemon ->
+                val appBarBackgroundColor = SolidColor(getPokemonBackgroundColor(pokemon.type1))
                 PokeCard(
                     pokemon = pokemon,
                     addZeroToPokemon = viewModel::addZerosToPokemonOrder,
-                    onClick = { onPokemonClick(pokemon.id, SolidColor(getPokemonBackgroundColor(pokemon.type1))) }
+                    onClick = { onPokemonClick(pokemon.id, appBarBackgroundColor) }
                 )
             }
 
             item {
                 if (isLoading) {
-                    CircularProgressIndicator(
+                    LoadingPokeball(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(16.dp)
@@ -194,10 +208,35 @@ fun PokeCard(
                     shape = RoundedCornerShape(16.dp),
                     color = getPokemonBackgroundColor(pokemon.type1),
                 ) {
-                    AsyncImage(
+                    SubcomposeAsyncImage(
                         model = pokemon.spriteUrl,
                         contentDescription = pokemon.name,
-                        modifier = Modifier.size(100.dp)
+                        loading = {
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Image(
+                                    painter = rememberAsyncImagePainter(R.drawable.pokeball_loading),
+                                    contentDescription = "Loading",
+                                    modifier = Modifier.size(50.dp) // Taille du placeholder
+                                )
+                            }
+                        },
+                        error = {
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Image(
+                                    painter = rememberAsyncImagePainter(R.drawable.pokeball_loading),
+                                    contentDescription = "Error",
+                                    modifier = Modifier.size(50.dp)
+                                )
+                            }
+                        },
+                        modifier = Modifier.size(100.dp),
+                        contentScale = ContentScale.Crop
                     )
                 }
                 Spacer(modifier.height(8.dp))
@@ -207,10 +246,6 @@ fun PokeCard(
                     fontWeight = FontWeight.Bold
                 )
             }
-        } else {
-            CircularProgressIndicator(modifier = Modifier
-                .size(32.dp)
-                .align(Alignment.Center))
         }
     }
 
@@ -245,7 +280,6 @@ fun DisplayRegion(region: String, modifier: Modifier = Modifier){
         )
 
     }
-
 
 }
 
