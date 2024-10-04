@@ -2,8 +2,10 @@ package com.example.pokedex.repositories
 
 import com.example.pokedex.data.Chain
 import com.example.pokedex.data.Evolution
+import com.example.pokedex.data.MoveDetail
 import com.example.pokedex.data.Pokemon
 import com.example.pokedex.data.PokemonSpecy
+import com.example.pokedex.models.PokemonMove
 import com.example.pokedex.network.ApiResponse
 import com.example.pokedex.network.PokeApiService
 import com.example.pokedex.room.dao.PokemonDao
@@ -28,6 +30,10 @@ class PokeDetailRepository @Inject constructor(
         return pokemonDao.getPokemonByName(name)
     }
 
+    suspend fun getPokemonByIdDao(id: Int): PokemonEntity?{
+        return pokemonDao.getPokemonById(id)
+    }
+
     suspend fun getPokemonDetailByUrl(url: String): Response<Pokemon>{
         return apiService.getPokemonDetailsByUrl(url)
     }
@@ -42,5 +48,9 @@ class PokeDetailRepository @Inject constructor(
 
     suspend fun getEvolutionChain(url: String): Response<Evolution> {
        return apiService.getPokemonEvolutionChain(url)
+    }
+
+    suspend fun getMove(url: String): Response<MoveDetail>{
+      return apiService.getPokemonMove(url)
     }
 }

@@ -73,7 +73,7 @@ fun PokemonDetailScreen(
            val pokemonColor = getPokemonBackgroundColor(it.types[0].type.name)
            Box(modifier = modifier.fillMaxSize()) {
                AnimatedBackground(pokemonColor)
-               // Partie supérieure avec la couleur du type
+
                Column(
                    modifier = Modifier
                        .fillMaxWidth()
@@ -126,7 +126,6 @@ fun PokemonDetailScreen(
 
                    }
                }
-               // Image du Pokémon chevauchant les deux sections
                AsyncImage(
                    model = it.sprites.other.officialArtwork.frontDefault,
                    contentDescription = it.name,
@@ -216,15 +215,11 @@ fun PokeTabRow(
         0 -> About(pokemon, species)
         1 -> BaseStats(pokemon)
         2 -> Evolution(species, viewModel, onPokemonClick = onPokemonClick)
-        3 -> Moves()
+        3 -> MovesTab()
     }
 }
 
 
-@Composable
-fun Moves() {
-    TODO("Not yet implemented")
-}
 
 
 

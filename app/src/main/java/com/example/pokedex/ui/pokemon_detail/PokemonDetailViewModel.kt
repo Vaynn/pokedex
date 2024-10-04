@@ -1,25 +1,18 @@
 package com.example.pokedex.ui.pokemon_detail
 
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pokedex.data.Chain
-import com.example.pokedex.data.Evolution
 import com.example.pokedex.data.EvolvesTo
+import com.example.pokedex.data.Move
 import com.example.pokedex.data.Pokemon
 import com.example.pokedex.data.PokemonSpecy
-import com.example.pokedex.data.Species
-import com.example.pokedex.data.Variety
+import com.example.pokedex.models.PokemonMove
 import com.example.pokedex.repositories.PokeDetailRepository
 import com.example.pokedex.room.entity.PokemonEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -57,6 +50,9 @@ class PokemonDetailViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> = _isLoading
 
+    private val _moves: MutableStateFlow<List<PokemonMove>> = MutableStateFlow<List<PokemonMove>>(mutableListOf())
+    val moves: StateFlow<List<PokemonMove>?> = _moves
+
     init {
         viewModelScope.launch {
             val pokemonId = savedStateHandle.get<Int>("pokemonId") ?: -1
@@ -68,9 +64,6 @@ class PokemonDetailViewModel @Inject constructor(
         }
     }
 
-    fun setIsLoading(isLoading: Boolean){
-        _isLoading.value = isLoading
-    }
 
     private suspend fun getPokemonDetail(id: Int){
         viewModelScope.launch {
@@ -90,7 +83,7 @@ class PokemonDetailViewModel @Inject constructor(
     }
 
 
-    suspend fun getPokemonByName(name: String): PokemonEntity? = withContext(Dispatchers.IO) {
+    private suspend fun getPokemonByName(name: String): PokemonEntity? = withContext(Dispatchers.IO) {
         var poke = repository.getPokemonByNameDao(name)
         if (poke == null) {
             val pokeApi = repository.getPokemonDetailByNameApi(name)
@@ -111,7 +104,29 @@ class PokemonDetailViewModel @Inject constructor(
         poke
     }
 
-    suspend fun getPokemonByUrl(url: String): PokemonEntity? = withContext(Dispatchers.IO) {
+    suspend fun getPokemonById(id: Int): PokemonEntity? = withContext(Dispatchers.IO) {
+        var poke = repository.getPokemonByIdDao(id)
+        if (poke == null) {
+            val pokeApi = repository.getPokemonDetail(id)
+            if (pokeApi.isSuccessful && pokeApi.body() != null) {
+                val resp = pokeApi.body()
+                resp?.let {
+                    poke = PokemonEntity(
+                        name = it.name,
+                        id = it.id,
+                        generation = 0,
+                        spriteUrl = it.sprites.other.officialArtwork.frontDefault,
+                        type1 = it.types[0].type.name,
+                        type2 = if (it.types.size > 1) it.types[1].type.name else ""
+                    )
+                }
+            }
+        }
+        poke
+    }
+
+
+        suspend fun getPokemonByUrl(url: String): PokemonEntity? = withContext(Dispatchers.IO) {
         val pokeApi = repository.getPokemonDetailByUrl(url)
         if (pokeApi.isSuccessful && pokeApi.body() != null) {
             val resp = pokeApi.body()
@@ -214,12 +229,20 @@ class PokemonDetailViewModel @Inject constructor(
                 println("Good branch found: $goodBranch")
                 goodBranch.flatten().forEach { ev ->
                     if (!_classicEvolutionDetailMap.value.containsKey(ev.name)) {
-                        getPokemonByName(ev.name)?.let { pokemon ->
-                            _classicEvolutionDetailMap.value = _classicEvolutionDetailMap.value.toMutableMap().apply {
-                                put(ev.name, pokemon)
+                        val pokemonId: Int = ev.url.split("/")
+                            .filter { it.isNotBlank() }
+                            .lastOrNull()
+                            ?.toIntOrNull()
+                            ?: -1
+                        if (pokemonId != -1) {
+                            getPokemonById(pokemonId)?.let { pokemon ->
+                                _classicEvolutionDetailMap.value =
+                                    _classicEvolutionDetailMap.value.toMutableMap().apply {
+                                        put(ev.name, pokemon)
+                                    }
+                                println("Added to classicEvolutionDetailMap: ${pokemon.name}")
+                                addPokemonSpeciesEvolution(pokemon.name)
                             }
-                            println("Added to classicEvolutionDetailMap: ${pokemon.name}")
-                            addPokemonSpeciesEvolution(pokemon.name)
                         }
                     }
                 }
@@ -252,7 +275,7 @@ class PokemonDetailViewModel @Inject constructor(
         return branches
     }
 
-    fun collectBranches(currentChain: Chain, currentBranch: MutableList<Evol>, branches: MutableList<List<Evol>>) {
+    private fun collectBranches(currentChain: Chain, currentBranch: MutableList<Evol>, branches: MutableList<List<Evol>>) {
         currentBranch.add(Evol(currentChain.species.name, currentChain.species.url))
 
         if (currentChain.evolvesTo.isEmpty()) {
@@ -266,7 +289,7 @@ class PokemonDetailViewModel @Inject constructor(
         }
     }
 
-    fun collectBranches(currentChain: EvolvesTo, currentBranch: MutableList<Evol>, branches: MutableList<List<Evol>>) {
+    private fun collectBranches(currentChain: EvolvesTo, currentBranch: MutableList<Evol>, branches: MutableList<List<Evol>>) {
         currentBranch.add(Evol(currentChain.species.name, currentChain.species.url))
 
         if (currentChain.evolvesTo.isEmpty()) {
@@ -286,4 +309,74 @@ class PokemonDetailViewModel @Inject constructor(
         }
     }
 
+    private fun searchLastVersion(moves: List<Move>?): String{
+        var lastVersion: Int = 0
+        var url: String = ""
+        moves?.forEach{ move ->
+            move.versionGroupDetails.forEach { detail ->
+                val vers = detail.versionGroup.url.split("/")
+                    .filter { it.isNotBlank() }
+                    .lastOrNull()
+                    ?.toIntOrNull() ?: 0
+                if (lastVersion < vers){
+                    lastVersion = vers
+                    url = detail.versionGroup.url
+                }
+            }
+
+        }
+        return url
+    }
+
+    private suspend fun getMovesDetails(moves: List<Move>?, version: String){
+
+        viewModelScope.launch {
+            var moveList: MutableList<PokemonMove> = mutableListOf()
+            moves?.forEach { move ->
+                val learnAt = move.versionGroupDetails.find {
+                    it.versionGroup.url == version
+                }?.levelLearnedAt
+                val mv = repository.getMove(move.move.url)
+                if (mv.isSuccessful && mv.body() != null) {
+                    val pokeMove = mv.body()
+                    val description = pokeMove?.flavorTextEntries?.find {
+                        it.versionGroup.url == version &&
+                                it.language.name == "en"
+                    }?.flavorText
+                    val pokemonMove = PokemonMove(
+                        name = pokeMove?.name ?: "",
+                        description = description ?: "",
+                        type = pokeMove?.type?.name ?: "",
+                        pp = pokeMove?.pp ?: -1,
+                        power = pokeMove?.power ?: -1,
+                        levelLearned = learnAt ?: -1
+                    )
+                    moveList.add(pokemonMove)
+                }
+
+            }
+            moveList = moveList.sortedBy { it.levelLearned }.toMutableList()
+            _moves.value = moveList
+
+        }
+
+    }
+
+
+
+    suspend fun loadPokemonMoves() {
+        viewModelScope.launch {
+            _isLoading.value = true
+            val version = searchLastVersion(_pokemon.value?.moves)
+            val moves = pokemon.value?.moves?.filter { move ->
+                move.versionGroupDetails.any { detail ->
+                    detail.versionGroup.url == version &&
+                    detail.levelLearnedAt != 0
+                }
+            }
+            getMovesDetails(moves, version)
+            _moves.value = _moves.value.sortedBy { it.levelLearned }
+            _isLoading.value = false
+        }
+    }
 }

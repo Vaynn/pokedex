@@ -2,6 +2,8 @@ package com.example.pokedex.network
 
 import com.example.pokedex.data.Evolution
 import com.example.pokedex.data.Generation
+import com.example.pokedex.data.Move
+import com.example.pokedex.data.MoveDetail
 import com.example.pokedex.data.PaginatedPokemonList
 import com.example.pokedex.data.Pokemon
 import com.example.pokedex.data.PokemonSpecy
@@ -40,5 +42,8 @@ interface PokeApiService {
 
     @GET
     suspend fun getPokemonEvolutionChain(@Url url: String): Response<Evolution>
+
+    @GET
+    suspend fun getPokemonMove(@Url url: String): Response<MoveDetail>
 
 }
