@@ -47,9 +47,29 @@ import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import com.example.pokedex.R
+import com.example.pokedex.ui.theme.BugType
 import com.example.pokedex.ui.theme.DarkGray
+import com.example.pokedex.ui.theme.DarkType
+import com.example.pokedex.ui.theme.DragonType
+import com.example.pokedex.ui.theme.ElectricType
+import com.example.pokedex.ui.theme.FairyType
+import com.example.pokedex.ui.theme.FightingType
+import com.example.pokedex.ui.theme.FireType
+import com.example.pokedex.ui.theme.FlyingType
+import com.example.pokedex.ui.theme.GhostType
+import com.example.pokedex.ui.theme.GrassType
+import com.example.pokedex.ui.theme.GroundType
+import com.example.pokedex.ui.theme.IceType
+import com.example.pokedex.ui.theme.NormalType
+import com.example.pokedex.ui.theme.PoisonType
 import com.example.pokedex.ui.theme.PokedexRed
 import com.example.pokedex.ui.theme.PokedexRedTransparant
+import com.example.pokedex.ui.theme.PsychicType
+import com.example.pokedex.ui.theme.RockType
+import com.example.pokedex.ui.theme.SteelType
+import com.example.pokedex.ui.theme.StellarType
+import com.example.pokedex.ui.theme.UnknownType
+import com.example.pokedex.ui.theme.WaterType
 import kotlin.random.Random
 
 @Composable
@@ -221,5 +241,31 @@ fun generateBalls(count: Int): List<Ball> {
             ), // Couleur aléatoire
             speed = random.nextInt(2000, 5000) // Vitesse aléatoire entre 2 et 5 secondes
         )
+    }
+}
+
+fun getPokemonTypeResourceImageId(type: String): Int {
+    return when (type) {
+        "normal" -> R.drawable.normal
+        "fighting" -> R.drawable.fighting
+        "flying" -> R.drawable.flying
+        "poison" -> R.drawable.poison
+        "ground" -> R.drawable.ground
+        "rock" -> R.drawable.rock
+        "bug" -> R.drawable.bug
+        "ghost" -> R.drawable.ghost
+        "steel" -> R.drawable.steel
+        "fire" -> R.drawable.fire
+        "water" -> R.drawable.water
+        "grass" -> R.drawable.grass
+        "electric" -> R.drawable.electric
+        "psychic" -> R.drawable.psychic
+        "ice" -> R.drawable.ice
+        "dragon" -> R.drawable.dragon
+        "dark" -> R.drawable.dark
+        "fairy" -> R.drawable.fairy
+        "stellar" -> R.drawable.stellar
+        "unknown" -> R.drawable.ic_hisui_pokeball
+        else -> R.drawable.ic_hisui_pokeball
     }
 }

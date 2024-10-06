@@ -64,7 +64,9 @@ class PokemonDetailViewModel @Inject constructor(
         }
     }
 
-
+    fun setIsLoadind(isLoading: Boolean){
+        _isLoading.value = isLoading
+    }
     private suspend fun getPokemonDetail(id: Int){
         viewModelScope.launch {
             val poke = repository.getPokemonDetail(id)
@@ -339,8 +341,7 @@ class PokemonDetailViewModel @Inject constructor(
                 val mv = repository.getMove(move.move.url)
                 if (mv.isSuccessful && mv.body() != null) {
                     val pokeMove = mv.body()
-                    val description = pokeMove?.flavorTextEntries?.find {
-                        it.versionGroup.url == version &&
+                    val description = pokeMove?.flavorTextEntries?.findLast {
                                 it.language.name == "en"
                     }?.flavorText
                     val pokemonMove = PokemonMove(
@@ -349,7 +350,8 @@ class PokemonDetailViewModel @Inject constructor(
                         type = pokeMove?.type?.name ?: "",
                         pp = pokeMove?.pp ?: -1,
                         power = pokeMove?.power ?: -1,
-                        levelLearned = learnAt ?: -1
+                        levelLearned = learnAt ?: -1,
+                        accuracy = pokeMove?.accuracy ?: -1
                     )
                     moveList.add(pokemonMove)
                 }

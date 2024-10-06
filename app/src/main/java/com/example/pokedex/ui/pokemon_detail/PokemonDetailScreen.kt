@@ -1,5 +1,6 @@
 package com.example.pokedex.ui.pokemon_detail
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,6 +38,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -50,6 +52,7 @@ import com.example.pokedex.R
 import com.example.pokedex.data.Pokemon
 import com.example.pokedex.data.PokemonSpecy
 import com.example.pokedex.ui.AnimatedBackground
+import com.example.pokedex.ui.getPokemonTypeResourceImageId
 import com.example.pokedex.ui.theme.DarkGray
 import com.example.pokedex.ui.theme.LightBackground
 import com.example.pokedex.ui.theme.PokedexRedTransparant
@@ -107,20 +110,14 @@ fun PokemonDetailScreen(
                            modifier = Modifier.align(Alignment.CenterHorizontally)
                        ) {
                            for (type in it.types) {
-                               Text(
-                                   text = type.type.name.uppercase(),
-                                   fontSize = 16.sp,
-                                   fontWeight = FontWeight.Bold,
-                                   color = Color.White,
-                                   modifier = Modifier
-                                       .padding(end = 8.dp)
-                                       .background(
-                                           getPokemonBackgroundColor(type.type.name).copy(
-                                               alpha = 0.6f
-                                           )
-                                       )
-                                       .padding(8.dp)
+                               Image(
+                                   painterResource(
+                                       id = getPokemonTypeResourceImageId(type.type.name)
+                                   ),
+                                   contentDescription = type.type.name,
+                                   modifier = Modifier.size(width = 100.dp, height = 30.dp)
                                )
+                               Spacer(modifier = Modifier.width(8.dp))
                            }
                        }
 

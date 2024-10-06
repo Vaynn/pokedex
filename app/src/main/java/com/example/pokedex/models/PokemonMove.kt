@@ -7,4 +7,5 @@ data class PokemonMove(
     val pp: Int,
     val power: Int?,
     val levelLearned: Int,
+    val accuracy: Int
 )
