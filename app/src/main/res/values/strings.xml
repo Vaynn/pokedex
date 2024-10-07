@@ -13,5 +13,10 @@
     <string name="shiny_form">SHINY FORM</string>
     <string name="total">TOTAL</string>
     <string name="arrow">arrow</string>
+    <string name="power">Power</string>
+    <string name="accuracy">Accuracy</string>
+    <string name="pp">PP</string>
+    <string name="collapse">Collapse</string>
+    <string name="see_description">See description</string>
     <string name="no_evolution">No further evolution is known for this Pokémon.</string>
 </resources>

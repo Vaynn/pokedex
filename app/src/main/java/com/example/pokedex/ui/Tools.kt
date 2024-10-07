@@ -269,3 +269,33 @@ fun getPokemonTypeResourceImageId(type: String): Int {
         else -> R.drawable.ic_hisui_pokeball
     }
 }
+
+fun getPokemonMiniTypeResourceImageId(type: String): Int {
+    return when (type) {
+        "normal" -> R.drawable.normal_mini
+        "fighting" -> R.drawable.fighting_mini
+        "flying" -> R.drawable.flying_mini
+        "poison" -> R.drawable.poison_mini
+        "ground" -> R.drawable.ground_mini
+        "rock" -> R.drawable.rock_mini
+        "bug" -> R.drawable.bug_mini
+        "ghost" -> R.drawable.ghost_mini
+        "steel" -> R.drawable.steel_mini
+        "fire" -> R.drawable.fire_mini
+        "water" -> R.drawable.water_mini
+        "grass" -> R.drawable.grass_mini
+        "electric" -> R.drawable.electric_mini
+        "psychic" -> R.drawable.psychic_mini
+        "ice" -> R.drawable.ice_mini
+        "dragon" -> R.drawable.dragon_mini
+        "dark" -> R.drawable.dark_mini
+        "fairy" -> R.drawable.fairy_mini
+        "stellar" -> R.drawable.stellar
+        "unknown" -> R.drawable.ic_hisui_pokeball
+        else -> R.drawable.ic_hisui_pokeball
+    }
+}
+
+
+
+

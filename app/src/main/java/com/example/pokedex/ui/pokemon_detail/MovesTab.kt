@@ -45,8 +45,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.pokedex.R
 import com.example.pokedex.models.PokemonMove
 import com.example.pokedex.ui.LoadingPokeball
+import com.example.pokedex.ui.getPokemonMiniTypeResourceImageId
 import com.example.pokedex.ui.getPokemonTypeResourceImageId
 import com.example.pokedex.ui.theme.LightBackground
 import com.example.pokedex.ui.theme.getPokemonBackgroundColor
@@ -86,7 +88,7 @@ fun MoveCard(move: PokemonMove, modifier: Modifier = Modifier){
     var isExpanded by remember {
         mutableStateOf(false)
     }
-    val collapseHeight = 150.dp
+    val collapseHeight = 70.dp
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -104,30 +106,50 @@ fun MoveCard(move: PokemonMove, modifier: Modifier = Modifier){
         Column(modifier = Modifier
             .fillMaxSize()
             .padding(8.dp)) {
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Row(
+                modifier = Modifier
+                .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painterResource(
+                        id = getPokemonMiniTypeResourceImageId(move.type)),
+                    contentDescription = move.type,
+                    modifier = Modifier.size(30.dp)
+                )
                 Text(
                     text = move.name.uppercase().replace("-", " "),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White
+                    color = Color.White,
                 )
+
                 Text(
                     text = "LVL ${move.levelLearned}",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White)
-            }
-            Spacer(modifier = Modifier.height(4.dp))
-            Row(modifier= Modifier.fillMaxWidth()) {
-                Image(
-                    painterResource(
-                        id = getPokemonTypeResourceImageId(move.type)),
-                        contentDescription = move.type,
-                    modifier = Modifier.size(width = 100.dp, height = 30.dp)
+                    color = Color.White,
                 )
             }
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(4.dp))
+            if (!isExpanded){
+                Row(modifier = Modifier
+                    .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Default.KeyboardArrowDown,
+                            contentDescription = stringResource(id = R.string.see_description),
+                            modifier = Modifier
+                                .clickable { isExpanded = !isExpanded }
+                                .size(30.dp)
+                        )
+                    }
+            }
+
             if (isExpanded) {
+                Spacer(modifier = Modifier.height(8.dp))
                 Row(modifier = Modifier.fillMaxWidth()) {
                     Text(
                         text = move.description,
@@ -138,44 +160,72 @@ fun MoveCard(move: PokemonMove, modifier: Modifier = Modifier){
 
                 }
                 Spacer(modifier = Modifier.height(8.dp))
-            }
-            Row(
-                modifier = Modifier
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceAround,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            text = stringResource(id = R.string.power),
+                            fontSize = 16.sp,
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = if (move.power != 0) move.power.toString() else "-",
+                            fontSize = 18.sp, color = Color.White, fontWeight = FontWeight.Bold
+                        )
+                    }
+                    VerticalDivider(color = Color.White, modifier = Modifier.height(30.dp))
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            text = stringResource(id = R.string.accuracy),
+                            fontSize = 16.sp,
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = move.accuracy.toString(),
+                            fontSize = 18.sp,
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                    VerticalDivider(color = Color.White, modifier = Modifier.height(30.dp))
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            text = stringResource(id = R.string.pp),
+                            fontSize = 16.sp,
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = move.pp.toString(),
+                            fontSize = 18.sp,
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.SpaceAround,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(text = "Power", fontSize = 16.sp, color = Color.White, fontWeight = FontWeight.Bold)
-                    Text(text = move.power.toString(), fontSize = 18.sp, color = Color.White, fontWeight = FontWeight.Bold)
+                    .padding(horizontal = 8.dp),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.Bottom)
+                {
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowUp,
+                        contentDescription = stringResource(id = R.string.collapse),
+                        modifier = Modifier
+                            .clickable { isExpanded = !isExpanded }
+                            .size(30.dp)
+                    )
                 }
-                VerticalDivider(color = Color.White, modifier = Modifier.height(30.dp))
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(text = "Accuracy", fontSize = 16.sp, color = Color.White, fontWeight = FontWeight.Bold)
-                    Text(text = move.accuracy.toString(), fontSize = 18.sp, color = Color.White, fontWeight = FontWeight.Bold)
-                }
-                VerticalDivider(color = Color.White, modifier = Modifier.height(30.dp))
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(text = "PP", fontSize = 16.sp, color = Color.White, fontWeight = FontWeight.Bold)
-                    Text(text = move.pp.toString(), fontSize = 18.sp, color = Color.White, fontWeight = FontWeight.Bold)
-                }
-
-            }
-            Spacer(modifier = Modifier.height(8.dp))
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp),
-                horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.CenterVertically)
-            {
-                Icon(
-                    imageVector = if (isExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-                    contentDescription = if (isExpanded) "Réduire" else "Voir description",
-                    modifier = Modifier.clickable { isExpanded = !isExpanded }
-                )
             }
         }
-
     }
 }

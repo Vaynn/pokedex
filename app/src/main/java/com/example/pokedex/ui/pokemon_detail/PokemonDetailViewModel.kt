@@ -335,15 +335,15 @@ class PokemonDetailViewModel @Inject constructor(
         viewModelScope.launch {
             var moveList: MutableList<PokemonMove> = mutableListOf()
             moves?.forEach { move ->
-                val learnAt = move.versionGroupDetails.find {
-                    it.versionGroup.url == version
+                val learnAt = move.versionGroupDetails.findLast {
+                    it.versionGroup.url == version && it.levelLearnedAt != 0
                 }?.levelLearnedAt
                 val mv = repository.getMove(move.move.url)
                 if (mv.isSuccessful && mv.body() != null) {
                     val pokeMove = mv.body()
                     val description = pokeMove?.flavorTextEntries?.findLast {
                                 it.language.name == "en"
-                    }?.flavorText
+                    }?.flavorText?.replace("\n", " ")
                     val pokemonMove = PokemonMove(
                         name = pokeMove?.name ?: "",
                         description = description ?: "",
@@ -367,13 +367,14 @@ class PokemonDetailViewModel @Inject constructor(
 
 
     suspend fun loadPokemonMoves() {
+        _isLoading.value = true
         viewModelScope.launch {
-            _isLoading.value = true
             val version = searchLastVersion(_pokemon.value?.moves)
             val moves = pokemon.value?.moves?.filter { move ->
                 move.versionGroupDetails.any { detail ->
-                    detail.versionGroup.url == version &&
-                    detail.levelLearnedAt != 0
+                    detail.versionGroup.url == version
+                            && detail.moveLearnMethod.name == "level-up"
+                            && detail.levelLearnedAt != 0
                 }
             }
             getMovesDetails(moves, version)
