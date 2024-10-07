@@ -62,7 +62,9 @@ fun MovesTab(viewModel: PokemonDetailViewModel = hiltViewModel(), modifier: Modi
     LaunchedEffect(Unit) {
         viewModel.loadPokemonMoves()
     }
-    if (!isLoading) {
+    if (isLoading || moves.isNullOrEmpty()) {
+        LoadingPokeball()
+    } else  {
         val moveList = moves
         moveList?.let {
             LazyColumn(modifier = modifier.fillMaxSize()) {
@@ -76,8 +78,6 @@ fun MovesTab(viewModel: PokemonDetailViewModel = hiltViewModel(), modifier: Modi
                 }
             }
         }
-    } else {
-        LoadingPokeball()
     }
 
 }
@@ -92,7 +92,8 @@ fun MoveCard(move: PokemonMove, modifier: Modifier = Modifier){
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .then(if (!isExpanded) Modifier.height(collapseHeight) else Modifier.wrapContentHeight())
+            .then(
+                if (!isExpanded) Modifier.height(collapseHeight) else Modifier.wrapContentHeight())
             .animateContentSize(),
         shape = RoundedCornerShape(16.dp),
         colors = CardColors(
@@ -105,7 +106,8 @@ fun MoveCard(move: PokemonMove, modifier: Modifier = Modifier){
     {
         Column(modifier = Modifier
             .fillMaxSize()
-            .padding(8.dp)) {
+            .padding(8.dp),
+        ) {
             Row(
                 modifier = Modifier
                 .fillMaxWidth(),

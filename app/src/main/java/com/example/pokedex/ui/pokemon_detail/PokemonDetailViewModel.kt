@@ -13,6 +13,7 @@ import com.example.pokedex.repositories.PokeDetailRepository
 import com.example.pokedex.room.entity.PokemonEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -369,17 +370,22 @@ class PokemonDetailViewModel @Inject constructor(
     suspend fun loadPokemonMoves() {
         _isLoading.value = true
         viewModelScope.launch {
-            val version = searchLastVersion(_pokemon.value?.moves)
-            val moves = pokemon.value?.moves?.filter { move ->
-                move.versionGroupDetails.any { detail ->
-                    detail.versionGroup.url == version
-                            && detail.moveLearnMethod.name == "level-up"
-                            && detail.levelLearnedAt != 0
+            try {
+                val version = searchLastVersion(_pokemon.value?.moves)
+                val moves = pokemon.value?.moves?.filter { move ->
+                    move.versionGroupDetails.any { detail ->
+                        detail.versionGroup.url == version
+                                && detail.moveLearnMethod.name == "level-up"
+                                && detail.levelLearnedAt != 0
+                    }
                 }
+                getMovesDetails(moves, version)
+                _moves.value = _moves.value.sortedBy { it.levelLearned }
+            } catch (e: Exception){
+                println("Error loading moves: ${e.message}")
+            } finally {
+                _isLoading.value = false
             }
-            getMovesDetails(moves, version)
-            _moves.value = _moves.value.sortedBy { it.levelLearned }
-            _isLoading.value = false
         }
     }
 }

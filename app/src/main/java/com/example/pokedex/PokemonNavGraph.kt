@@ -18,6 +18,7 @@ import com.example.pokedex.ui.pokemon_detail.PokemonDetailScreen
 object NavRoutes {
     const val HOME = "home"
     const val POKEMON_DETAIL = "pokemon_detail/{pokemonId}"
+    const val SEARCH = "search"
 
     fun pokemonDetail(pokemonId: Int): String {
         return "pokemon_detail/$pokemonId"
@@ -54,6 +55,9 @@ fun PokemonNavGraph(
 
                 }
             )
+        }
+        composable(NavRoutes.SEARCH){
+
         }
     }
 }

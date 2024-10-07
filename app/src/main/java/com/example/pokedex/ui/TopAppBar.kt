@@ -68,20 +68,6 @@ fun PokeTopAppBar(
                 containerColor = Color.Transparent,
                 titleContentColor = Color.White
             ),
-            actions = {
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(
-                        imageVector = Icons.Filled.Search,
-                        contentDescription = stringResource(id = R.string.search),
-                        tint = Color.White,
-                        modifier = Modifier
-                            .background(WaterBlue, CircleShape)
-                            .size(24.dp)
-
-                    )
-
-                }
-            },
             scrollBehavior = scrollBehavior,
             modifier = modifier
                 .fillMaxWidth()
