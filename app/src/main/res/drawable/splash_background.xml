@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Couche de couleur de fond -->
+    <item>
+        <color android:color="@color/pokedex_red" />
+    </item>
+
+    <!-- Couche de l'image par-dessus -->
+    <item>
+        <bitmap
+            android:src="@drawable/pikachu_splash_v26"
+            android:gravity="center" />
+    </item>
+</layer-list>

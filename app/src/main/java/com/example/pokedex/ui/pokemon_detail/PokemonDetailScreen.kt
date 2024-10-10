@@ -70,7 +70,7 @@ fun PokemonDetailScreen(
     val pokemonSpecy by viewModel.pokemonSpecies.collectAsState()
 
 
-
+    val url = pokemon?.sprites?.other?.officialArtwork?.frontDefault ?: R.drawable.no_sprite
    pokemon?.let { it ->
        pokemonSpecy?.let {  species ->
            val pokemonColor = getPokemonBackgroundColor(it.types[0].type.name)
@@ -124,7 +124,7 @@ fun PokemonDetailScreen(
                    }
                }
                AsyncImage(
-                   model = it.sprites.other.officialArtwork.frontDefault,
+                   model = url,
                    contentDescription = it.name,
                    modifier = Modifier
                        .size(200.dp)

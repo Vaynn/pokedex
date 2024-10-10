@@ -98,6 +98,6 @@ class HomeViewModel @Inject constructor(
      * add X times 0 to make 4 digit number
      */
     fun addZerosToPokemonOrder(order: Int): String{
-        return "#" + "0".repeat(4 - order.toString().length) + order.toString()
+        return "#${order.toString().padStart(4, '0')}"
     }
 }

@@ -92,12 +92,13 @@ class PokemonDetailViewModel @Inject constructor(
             val pokeApi = repository.getPokemonDetailByNameApi(name)
             if (pokeApi.isSuccessful && pokeApi.body() != null) {
                 val resp = pokeApi.body()
+                val url = resp?.sprites?.other?.officialArtwork?.frontDefault ?: ""
                 resp?.let {
                     poke = PokemonEntity(
                         name = it.name,
                         id = it.id,
                         generation = 0,
-                        spriteUrl = it.sprites.other.officialArtwork.frontDefault,
+                        spriteUrl = url,
                         type1 = it.types[0].type.name,
                         type2 = if (it.types.size > 1) it.types[1].type.name else ""
                     )
@@ -113,12 +114,13 @@ class PokemonDetailViewModel @Inject constructor(
             val pokeApi = repository.getPokemonDetail(id)
             if (pokeApi.isSuccessful && pokeApi.body() != null) {
                 val resp = pokeApi.body()
+                val url = resp?.sprites?.other?.officialArtwork?.frontDefault ?: ""
                 resp?.let {
                     poke = PokemonEntity(
                         name = it.name,
                         id = it.id,
                         generation = 0,
-                        spriteUrl = it.sprites.other.officialArtwork.frontDefault,
+                        spriteUrl = url,
                         type1 = it.types[0].type.name,
                         type2 = if (it.types.size > 1) it.types[1].type.name else ""
                     )
@@ -133,12 +135,13 @@ class PokemonDetailViewModel @Inject constructor(
         val pokeApi = repository.getPokemonDetailByUrl(url)
         if (pokeApi.isSuccessful && pokeApi.body() != null) {
             val resp = pokeApi.body()
+            val url = resp?.sprites?.other?.officialArtwork?.frontDefault ?: ""
             resp?.let {
                 return@withContext PokemonEntity(
                     name = it.name,
                     id = it.id,
                     generation = 0,
-                    spriteUrl = it.sprites.other.officialArtwork.frontDefault,
+                    spriteUrl = url,
                     type1 = it.types[0].type.name,
                     type2 = if (it.types.size > 1) it.types[1].type.name else ""
                 )

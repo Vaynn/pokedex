@@ -92,7 +92,7 @@ fun Evolution(
             ) {
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
-                        .data(pokemon?.sprites?.other?.officialArtwork?.frontDefault)
+                        .data(pokemon?.sprites?.other?.officialArtwork?.frontDefault ?: R.drawable.no_sprite)
                         .crossfade(true)
                         .build(),
                     contentDescription = "Grayed Image",
@@ -221,7 +221,6 @@ fun SpecialEvolution(
                     onPokemonClick = onPokemonClick,
                     isClickable = false
                 )
-
                 Spacer(modifier = Modifier.height(18.dp))
             }
         }
@@ -267,7 +266,7 @@ fun DisplayEvolutionChain(
                 ) {
                     AsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
-                            .data(detail?.spriteUrl)
+                            .data(detail.spriteUrl.ifBlank { R.drawable.no_sprite })
                             .crossfade(true)
                             .build(),
                         contentDescription = ev.name,

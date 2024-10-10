@@ -14,6 +14,7 @@ import androidx.navigation.navArgument
 import com.example.pokedex.ui.home.HomeScreen
 import com.example.pokedex.ui.home.HomeViewModel
 import com.example.pokedex.ui.pokemon_detail.PokemonDetailScreen
+import com.example.pokedex.ui.search.SearchScreen
 
 object NavRoutes {
     const val HOME = "home"
@@ -57,7 +58,15 @@ fun PokemonNavGraph(
             )
         }
         composable(NavRoutes.SEARCH){
+            SearchScreen(
+                onPokemonClick = { pokemonId, pokemonColor ->
+                    viewModel.updatePokemonColor(pokemonColor)
+                    navController.navigate(NavRoutes.pokemonDetail(pokemonId)){
+                        popUpTo(NavRoutes.HOME) { inclusive = false }
+                    }
 
+                }
+            )
         }
     }
 }

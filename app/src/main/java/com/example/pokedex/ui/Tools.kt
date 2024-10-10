@@ -265,8 +265,8 @@ fun getPokemonTypeResourceImageId(type: String): Int {
         "dark" -> R.drawable.dark
         "fairy" -> R.drawable.fairy
         "stellar" -> R.drawable.stellar
-        "unknown" -> R.drawable.ic_hisui_pokeball
-        else -> R.drawable.ic_hisui_pokeball
+        "unknown" -> R.drawable.ic_pokeball
+        else -> R.drawable.ic_pokeball
     }
 }
 
@@ -291,9 +291,44 @@ fun getPokemonMiniTypeResourceImageId(type: String): Int {
         "dark" -> R.drawable.dark_mini
         "fairy" -> R.drawable.fairy_mini
         "stellar" -> R.drawable.stellar
-        "unknown" -> R.drawable.ic_hisui_pokeball
-        else -> R.drawable.ic_hisui_pokeball
+        "unknown" -> R.drawable.ic_pokeball
+        else -> R.drawable.ic_pokeball
     }
+}
+
+val regionImageMap: Map<Int, Int> = mapOf(
+    0 to R.drawable.all_pokeball,
+    1 to R.drawable.kanto_safariball,
+    2 to R.drawable.johto_fastball,
+    3 to R.drawable.hoenn_diveball,
+    4 to R.drawable.sinnoh_duskball,
+    5 to R.drawable.unova_dreamball,
+    6 to R.drawable.kalos_healball,
+    7 to R.drawable.alola_beastball,
+    8 to R.drawable.galar_quickball,
+    9 to R.drawable.paldea_friendball,
+)
+
+fun determineGeneration(id: Int): Int {
+    return when (id) {
+        in 1..151 -> 1 // Kanto
+        in 152..251 -> 2 // Johto
+        in 252..386 -> 3
+        in 387..493 -> 4
+        in 494..649 -> 5
+        in 650..721 -> 6
+        in 722..809 -> 7
+        in 810..905 -> 8
+        in 906..1025 -> 9
+        else -> 0
+    }
+}
+
+/**
+ * add X times 0 to make 4 digit number
+ */
+fun addZerosToPokemonOrder(order: Int): String{
+    return "#${order.toString().padStart(4, '0')}"
 }
 
 

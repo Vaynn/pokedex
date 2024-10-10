@@ -16,6 +16,8 @@ import com.example.pokedex.network.ApiResponse
 import com.example.pokedex.network.PokeApiService
 import com.example.pokedex.room.dao.PokemonDao
 import com.example.pokedex.room.entity.PokemonEntity
+import com.example.pokedex.ui.determineGeneration
+import com.example.pokedex.ui.regionImageMap
 import retrofit2.Response
 import javax.inject.Inject
 
@@ -27,33 +29,6 @@ class PokemonRepository @Inject constructor(
     private val generationMap = mutableMapOf<Int, PokemonRegion>()
 
 
-    private val regionImageMap: Map<Int, Int> = mapOf(
-        0 to R.drawable.ic_default_pokeball,
-        1 to R.drawable.ic_kanto_safariball,
-        2 to R.drawable.ic_johto_fastball,
-        3 to R.drawable.ic_hoenn_diveball,
-        4 to R.drawable.ic_sinnoh_duskball,
-        5 to R.drawable.ic_unova_dreamball,
-        6 to R.drawable.ic_kalos_healball,
-        7 to R.drawable.ic_alola_beastball,
-        8 to R.drawable.ic_galar_quickball,
-        9 to R.drawable.ic_paldea_friendball,
-    )
-
-    private fun determineGeneration(id: Int): Int {
-        return when (id) {
-            in 1..151 -> 1 // Kanto
-            in 152..251 -> 2 // Johto
-            in 252..386 -> 3
-            in 387..493 -> 4
-            in 494..649 -> 5
-            in 650..721 -> 6
-            in 722..809 -> 7
-            in 810..905 -> 8
-            in 906..1025 -> 9
-            else -> 0
-        }
-    }
 
     /**
      * GET POKEMONS BY GENERATION PAGINATED. CHECK IF DATA IS IN DB OR GET FROM API AND SAVE IT IN DB
@@ -94,7 +69,7 @@ class PokemonRepository @Inject constructor(
             "All",
             1,
             1025,
-            R.drawable.ic_default_pokeball
+            R.drawable.all_pokeball
             )
         generationMap[0] = pokeRegion
         for (generationId in 1..9) {
@@ -136,14 +111,15 @@ class PokemonRepository @Inject constructor(
 
         for (id in startId..endId){
             val response = apiService.getPokemonDetails(id)
-            if (response.isSuccessful) {
+            if (response.isSuccessful && response.body() != null) {
+                val url = response.body()?.sprites?.other?.officialArtwork?.frontDefault ?: ""
                 response.body()?.let { pokemon ->
                     val entity = PokemonEntity(
                         id = pokemon.id,
                         name = pokemon.name,
                         type1 = pokemon.types[0].type.name,
                         type2 = pokemon.types.getOrNull(1)?.type?.name,
-                        spriteUrl = pokemon.sprites.other.officialArtwork.frontDefault,
+                        spriteUrl = url,
                         generation = determineGeneration(id)
                     )
                     pokemons.add(entity)

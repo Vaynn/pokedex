@@ -61,6 +61,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.ImageLoader
@@ -112,6 +113,9 @@ fun HomeScreen(
     }
 
     Column(modifier = modifier.fillMaxSize()) {
+
+
+        Spacer(modifier = Modifier.height(12.dp))
         RegionFilterRow(
             regionsMap = regionByGeneration,
             selectedGeneration = selectedGeneration,
@@ -122,6 +126,13 @@ fun HomeScreen(
 
         Spacer(modifier = Modifier.height(12.dp))
 
+        Text(
+            text = stringResource(id = R.string.generations_menu),
+            fontSize = 18.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = PokedexRed,
+            modifier = Modifier.padding(start = 12.dp, end = 12.dp, bottom = 4.dp)
+        )
         HorizontalDivider(
             modifier = Modifier.
             fillMaxWidth(),
@@ -209,7 +220,7 @@ fun PokeCard(
                     color = getPokemonBackgroundColor(pokemon.type1),
                 ) {
                     SubcomposeAsyncImage(
-                        model = pokemon.spriteUrl,
+                        model = pokemon.spriteUrl.ifBlank { R.drawable.no_sprite },
                         contentDescription = pokemon.name,
                         loading = {
                             Box(

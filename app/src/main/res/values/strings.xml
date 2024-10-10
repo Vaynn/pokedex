@@ -5,6 +5,7 @@
     <string name="kanto">Kanto</string>
     <string name="all">All</string>
     <string name="generation">Generation</string>
+    <string name="generations_menu">GENERATIONS</string>
     <string name="about">About</string>
     <string name="base_stats">Stats</string>
     <string name="evolution">Evolutions</string>
@@ -19,4 +20,6 @@
     <string name="collapse">Collapse</string>
     <string name="see_description">See description</string>
     <string name="no_evolution">No further evolution is known for this Pokémon.</string>
+    <string name="no_pokemon">No Pokemon found.</string>
+    <string name="search_placeHolder">Find your Pokémon!</string>
 </resources>
