@@ -39,8 +39,10 @@ class SearchViewModel @Inject constructor(
                 .filter { query -> query.isNotBlank() }
                 .distinctUntilChanged()
                 .collectLatest { query ->
+                    println("Searching for: $query")
                     _isLoading.value = true
                     val results = repository.searchPokemonDaoList(query)
+                    println("Results: ${results.size} Pokémon found")
                     _searchResults.value = results
                     _isLoading.value = false
                 }
@@ -54,6 +56,19 @@ class SearchViewModel @Inject constructor(
             _isLoading.value = false
         } else {
             _isLoading.value = true
+            println("Searching for: $query")
+        }
+    }
+
+    fun searchPokemonByType(type: String){
+        viewModelScope.launch {
+            _isLoading.value = true
+            val results = when (type) {
+                "mythical", "legendary" -> repository.searchPokemonBySpecialList(type)
+                else ->  repository.searchPokemonByTypeList(type)
+            }
+            _searchResults.value = results
+            _isLoading.value = false
         }
     }
 

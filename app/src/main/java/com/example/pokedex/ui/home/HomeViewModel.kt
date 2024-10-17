@@ -4,8 +4,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.pokedex.PokemonSharedViewModel
 import com.example.pokedex.R
 import com.example.pokedex.data.Pokemon
 import com.example.pokedex.data.PokemonShort
@@ -25,7 +27,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val repository: PokemonRepository
+    private val repository: PokemonRepository,
+
 ): ViewModel() {
 
     private val _pokemonList = MutableStateFlow<List<PokemonEntity>>(emptyList())
@@ -33,6 +36,8 @@ class HomeViewModel @Inject constructor(
 
     private val _loading = MutableStateFlow(false)
     val loading: StateFlow<Boolean> = _loading
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage: StateFlow<String?> = _errorMessage
 
     private val _generationRegionMap = MutableStateFlow<Map<Int, PokemonRegion>>(emptyMap())
     val generationRegionMap: StateFlow<Map<Int, PokemonRegion>> = _generationRegionMap
@@ -51,10 +56,15 @@ class HomeViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            repository.preloadGenerationData()
-            _generationRegionMap.value = repository.getRegionGenerationMap()
-            loadPokemonsForGeneration(currentGeneration)
-
+            when (val result = repository.preloadGenerationData()) {
+                is ApiResponse.Success -> {
+                    _generationRegionMap.value = repository.getRegionGenerationMap()
+                    loadPokemonsForGeneration(currentGeneration)
+                }
+                is ApiResponse.Error -> {
+                    _errorMessage.value = result.message
+                }
+            }
         }
     }
 
@@ -65,31 +75,47 @@ class HomeViewModel @Inject constructor(
         _pokemonList.value = emptyList()
         _hasReachedEnd.value = false
         _loading.value = true
+        _errorMessage.value = null
         viewModelScope.launch {
-            val pokemons = repository.getPokemonsByGeneration(currentGeneration, pageSize, currentPage * pageSize)
-            _pokemonList.value = pokemons
-            currentPage++
+            when (val pokemons = repository.getPokemonsByGeneration(currentGeneration, pageSize, currentPage * pageSize)){
+                is ApiResponse.Success -> {
+                    _pokemonList.value = pokemons.data
+                    currentPage++
+                    _loading.value = false
+                    _isRegionFilterReady.value = true
+                }
+                is ApiResponse.Error -> {
+                    _errorMessage.value = pokemons.message
+                }
+            }
             _loading.value = false
-            _isRegionFilterReady.value = true
         }
     }
     fun loadNextPage() {
         if (!_loading.value && !_hasReachedEnd.value) {
-
+            _errorMessage.value = null
             viewModelScope.launch {
                 _loading.value = true
-                val pokemons = repository.getPokemonsByGeneration(
+                when (val pokemons = repository.getPokemonsByGeneration(
                     currentGeneration,
                     pageSize,
-                    currentPage * pageSize)
-                if (pokemons.isNotEmpty()) {
-                    _pokemonList.value += pokemons
-                    _loading.value = false
-                    currentPage++
-                } else {
-                    _hasReachedEnd.value = true
+                    currentPage * pageSize)){
+                    is ApiResponse.Success -> {
+                        if (pokemons.data.isNotEmpty()) {
+                            _pokemonList.value += pokemons.data
+                            _loading.value = false
+                            currentPage++
+                        } else {
+                            _hasReachedEnd.value = true
+                        }
+                        _loading.value = false
+                    }
+                    is ApiResponse.Error -> {
+                        _errorMessage.value = pokemons.message
+                        _loading.value = false
+                    }
                 }
-                _loading.value = false
+
             }
         }
     }

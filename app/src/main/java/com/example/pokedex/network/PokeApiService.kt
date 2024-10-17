@@ -6,8 +6,10 @@ import com.example.pokedex.data.Move
 import com.example.pokedex.data.MoveDetail
 import com.example.pokedex.data.PaginatedPokemonList
 import com.example.pokedex.data.Pokemon
+import com.example.pokedex.data.PokemonForm
 import com.example.pokedex.data.PokemonSpecy
 import com.example.pokedex.data.Species
+import com.example.pokedex.data.TypeDetail
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -45,5 +47,11 @@ interface PokeApiService {
 
     @GET
     suspend fun getPokemonMove(@Url url: String): Response<MoveDetail>
+
+    @GET("type/{name}")
+    suspend fun getTypeDetail(@Path("name") name: String): Response<TypeDetail>
+
+    @GET
+    suspend fun getPokemonForm(@Url url: String): Response<PokemonForm>
 
 }

@@ -22,4 +22,6 @@
     <string name="no_evolution">No further evolution is known for this Pokémon.</string>
     <string name="no_pokemon">No Pokemon found.</string>
     <string name="search_placeHolder">Find your Pokémon!</string>
+    <string name="special">Special</string>
+    <string name="type">Type</string>
 </resources>

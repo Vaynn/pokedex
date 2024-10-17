@@ -77,7 +77,7 @@ class PokemonDetailViewModel @Inject constructor(
         }
     }
 
-    fun addPokemonToRegionalDetailMap(name: String, entity: PokemonEntity) {
+    private fun addPokemonToRegionalDetailMap(name: String, entity: PokemonEntity) {
         _regionalDetailMap.value = _regionalDetailMap.value.toMutableMap().apply {
             if (!this.containsKey(name)){
                 this[name] = entity
@@ -108,7 +108,7 @@ class PokemonDetailViewModel @Inject constructor(
         poke
     }
 
-    suspend fun getPokemonById(id: Int): PokemonEntity? = withContext(Dispatchers.IO) {
+    private suspend fun getPokemonById(id: Int): PokemonEntity? = withContext(Dispatchers.IO) {
         var poke = repository.getPokemonByIdDao(id)
         if (poke == null) {
             val pokeApi = repository.getPokemonDetail(id)
@@ -131,7 +131,7 @@ class PokemonDetailViewModel @Inject constructor(
     }
 
 
-        suspend fun getPokemonByUrl(url: String): PokemonEntity? = withContext(Dispatchers.IO) {
+        private suspend fun getPokemonByUrl(url: String): PokemonEntity? = withContext(Dispatchers.IO) {
         val pokeApi = repository.getPokemonDetailByUrl(url)
         if (pokeApi.isSuccessful && pokeApi.body() != null) {
             val resp = pokeApi.body()
@@ -162,7 +162,7 @@ class PokemonDetailViewModel @Inject constructor(
     /**
      * Add in a map the special evolution of a pokemon
      */
-    suspend fun addPokemonSpeciesEvolution(name: String) = withContext(Dispatchers.IO) {
+    private suspend fun addPokemonSpeciesEvolution(name: String) = withContext(Dispatchers.IO) {
         val species = repository.getPokemonSpeciesByName(name)
         if (species.isSuccessful && species.body() != null) {
             val varieties = species.body()?.varieties
@@ -187,7 +187,7 @@ class PokemonDetailViewModel @Inject constructor(
         }
     }
 
-    suspend fun getPokemonEvolution(url: String) = withContext(Dispatchers.IO) {
+    private suspend fun getPokemonEvolution(url: String) = withContext(Dispatchers.IO) {
         val evol = repository.getEvolutionChain(url)
         if (evol.isSuccessful && evol.body() != null) {
             println("Evolution chain loaded: ${evol.body()?.chain}")
@@ -200,7 +200,7 @@ class PokemonDetailViewModel @Inject constructor(
     /**
      * get Regionals Form of a Pokemon and add it in a Map
      */
-    fun getRegionalsEvolution() {
+    private fun getRegionalsEvolution() {
         _pokemonSpecies.value?.varieties.let { varieties ->
             val varietyPrefixName =
                 _pokemon.value?.name?.split("-")?.firstOrNull() ?: ""

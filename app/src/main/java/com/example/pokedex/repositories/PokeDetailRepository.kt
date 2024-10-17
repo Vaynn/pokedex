@@ -4,6 +4,7 @@ import com.example.pokedex.data.Chain
 import com.example.pokedex.data.Evolution
 import com.example.pokedex.data.MoveDetail
 import com.example.pokedex.data.Pokemon
+import com.example.pokedex.data.PokemonForm
 import com.example.pokedex.data.PokemonSpecy
 import com.example.pokedex.models.PokemonMove
 import com.example.pokedex.network.ApiResponse
@@ -52,5 +53,9 @@ class PokeDetailRepository @Inject constructor(
 
     suspend fun getMove(url: String): Response<MoveDetail>{
       return apiService.getPokemonMove(url)
+    }
+
+    suspend fun getPokemonForm(url: String): Response<PokemonForm>{
+        return apiService.getPokemonForm(url)
     }
 }

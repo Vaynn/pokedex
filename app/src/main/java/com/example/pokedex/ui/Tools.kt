@@ -296,6 +296,32 @@ fun getPokemonMiniTypeResourceImageId(type: String): Int {
     }
 }
 
+val typeImageMap: Map<String, Int> = mapOf(
+    "normal" to R.drawable.normal_mini,
+    "fighting" to R.drawable.fighting_mini,
+    "flying" to R.drawable.flying_mini,
+    "poison" to R.drawable.poison_mini,
+    "ground" to R.drawable.ground_mini,
+    "rock" to R.drawable.rock_mini,
+    "bug" to R.drawable.bug_mini,
+    "ghost" to R.drawable.ghost_mini,
+    "steel" to R.drawable.steel_mini,
+    "fire" to R.drawable.fire_mini,
+    "water" to R.drawable.water_mini,
+    "grass" to R.drawable.grass_mini,
+    "electric" to R.drawable.electric_mini,
+    "psychic" to R.drawable.psychic_mini,
+    "ice" to R.drawable.ice_mini,
+    "dragon" to R.drawable.dragon_mini,
+    "dark" to R.drawable.dark_mini,
+    "fairy" to R.drawable.fairy_mini,
+)
+
+val specialsPokemonCategoryImageMap: Map<String, Int> = mapOf(
+    "mythical" to R.drawable.mythical,
+    "legendary" to R.drawable.legendary
+)
+
 val regionImageMap: Map<Int, Int> = mapOf(
     0 to R.drawable.all_pokeball,
     1 to R.drawable.kanto_safariball,
@@ -323,6 +349,98 @@ fun determineGeneration(id: Int): Int {
         else -> 0
     }
 }
+
+val legendary: Map<String, String> = mapOf(
+        "articuno" to "https://pokeapi.co/api/v2/pokemon/144/",
+        "zapdos" to "https://pokeapi.co/api/v2/pokemon/145/",
+        "moltres" to "https://pokeapi.co/api/v2/pokemon/146/",
+        "mewtwo" to "https://pokeapi.co/api/v2/pokemon/150/",
+        "raikou" to "https://pokeapi.co/api/v2/pokemon/243/",
+        "entei" to "https://pokeapi.co/api/v2/pokemon/244/",
+        "suicune" to "https://pokeapi.co/api/v2/pokemon/245/",
+        "lugia" to "https://pokeapi.co/api/v2/pokemon/249/",
+        "ho-oh" to "https://pokeapi.co/api/v2/pokemon/250/",
+        "regirock" to "https://pokeapi.co/api/v2/pokemon/377/",
+        "regice" to "https://pokeapi.co/api/v2/pokemon/378/",
+        "registeel" to "https://pokeapi.co/api/v2/pokemon/379/",
+        "latias" to "https://pokeapi.co/api/v2/pokemon/380/",
+        "latios" to "https://pokeapi.co/api/v2/pokemon/381/",
+        "kyogre" to "https://pokeapi.co/api/v2/pokemon/382/",
+        "groudon" to "https://pokeapi.co/api/v2/pokemon/383/",
+        "rayquaza" to "https://pokeapi.co/api/v2/pokemon/384/",
+        "uxie" to "https://pokeapi.co/api/v2/pokemon/480/",
+        "mesprit" to "https://pokeapi.co/api/v2/pokemon/481/",
+        "azelf" to "https://pokeapi.co/api/v2/pokemon/482/",
+        "dialga" to "https://pokeapi.co/api/v2/pokemon/483/",
+        "palkia" to "https://pokeapi.co/api/v2/pokemon/484/",
+        "heatran" to "https://pokeapi.co/api/v2/pokemon/485/",
+        "regigigas" to "https://pokeapi.co/api/v2/pokemon/486/",
+        "giratina" to "https://pokeapi.co/api/v2/pokemon/487/",
+        "cresselia" to "https://pokeapi.co/api/v2/pokemon/488/",
+        "cobalion" to "https://pokeapi.co/api/v2/pokemon/638/",
+        "terrakion" to "https://pokeapi.co/api/v2/pokemon/639/",
+        "virizion" to "https://pokeapi.co/api/v2/pokemon/640/",
+        "tornadus" to "https://pokeapi.co/api/v2/pokemon/641/",
+        "thundurus" to "https://pokeapi.co/api/v2/pokemon/642/",
+        "reshiram" to "https://pokeapi.co/api/v2/pokemon/643/",
+        "zekrom" to "https://pokeapi.co/api/v2/pokemon/644/",
+        "landorus" to "https://pokeapi.co/api/v2/pokemon/645/",
+        "kyurem" to "https://pokeapi.co/api/v2/pokemon/646/",
+        "xerneas" to "https://pokeapi.co/api/v2/pokemon/716/",
+        "yveltal" to "https://pokeapi.co/api/v2/pokemon/717/",
+        "zygarde" to "https://pokeapi.co/api/v2/pokemon/718/",
+        "tapu koko" to "https://pokeapi.co/api/v2/pokemon/785/",
+        "tapu lele" to "https://pokeapi.co/api/v2/pokemon/786/",
+        "tapu bulu" to "https://pokeapi.co/api/v2/pokemon/787/",
+        "tapu fini" to "https://pokeapi.co/api/v2/pokemon/788/",
+        "cosmog" to "https://pokeapi.co/api/v2/pokemon/789/",
+        "cosmoem" to "https://pokeapi.co/api/v2/pokemon/790/",
+        "solgaleo" to "https://pokeapi.co/api/v2/pokemon/791/",
+        "lunala" to "https://pokeapi.co/api/v2/pokemon/792/",
+        "necrozma" to "https://pokeapi.co/api/v2/pokemon/800/",
+        "zacian" to "https://pokeapi.co/api/v2/pokemon/888/",
+        "zamazenta" to "https://pokeapi.co/api/v2/pokemon/889/",
+        "eternatus" to "https://pokeapi.co/api/v2/pokemon/890/",
+        "kubfu" to "https://pokeapi.co/api/v2/pokemon/891/",
+        "urshifu" to "https://pokeapi.co/api/v2/pokemon/892/",
+        "regieleki" to "https://pokeapi.co/api/v2/pokemon/894/",
+        "regidrago" to "https://pokeapi.co/api/v2/pokemon/895/",
+        "glastrier" to "https://pokeapi.co/api/v2/pokemon/896/",
+        "spectrier" to "https://pokeapi.co/api/v2/pokemon/897/",
+        "calyrex" to "https://pokeapi.co/api/v2/pokemon/898/",
+        "ting-lu" to "https://pokeapi.co/api/v2/pokemon/1002/",
+        "chien-pao" to "https://pokeapi.co/api/v2/pokemon/1003/",
+        "wo-chien" to "https://pokeapi.co/api/v2/pokemon/1001/",
+        "chi-yu" to "https://pokeapi.co/api/v2/pokemon/1004/",
+        "koraidon" to "https://pokeapi.co/api/v2/pokemon/1007/",
+        "miraidon" to "https://pokeapi.co/api/v2/pokemon/1008/"
+        )
+
+        val mythical = mapOf(
+            "mew" to "https://pokeapi.co/api/v2/pokemon/151/",
+            "celebi" to "https://pokeapi.co/api/v2/pokemon/251/",
+            "jirachi" to "https://pokeapi.co/api/v2/pokemon/385/",
+            "deoxys" to "https://pokeapi.co/api/v2/pokemon/386/",
+            "phione" to "https://pokeapi.co/api/v2/pokemon/489/",
+            "manaphy" to "https://pokeapi.co/api/v2/pokemon/490/",
+            "darkrai" to "https://pokeapi.co/api/v2/pokemon/491/",
+            "shaymin" to "https://pokeapi.co/api/v2/pokemon/492/",
+            "arceus" to "https://pokeapi.co/api/v2/pokemon/493/",
+            "victini" to "https://pokeapi.co/api/v2/pokemon/494/",
+            "keldeo" to "https://pokeapi.co/api/v2/pokemon/647/",
+            "meloetta" to "https://pokeapi.co/api/v2/pokemon/648/",
+            "genesect" to "https://pokeapi.co/api/v2/pokemon/649/",
+            "diancie" to "https://pokeapi.co/api/v2/pokemon/719/",
+            "hoopa" to "https://pokeapi.co/api/v2/pokemon/720/",
+            "volcanion" to "https://pokeapi.co/api/v2/pokemon/721/",
+            "magearna" to "https://pokeapi.co/api/v2/pokemon/801/",
+            "marshadow" to "https://pokeapi.co/api/v2/pokemon/802/",
+            "zeraora" to "https://pokeapi.co/api/v2/pokemon/807/",
+            "meltan" to "https://pokeapi.co/api/v2/pokemon/808/",
+            "melmetal" to "https://pokeapi.co/api/v2/pokemon/809/",
+            "zarude" to "https://pokeapi.co/api/v2/pokemon/893/",
+)
+
 
 /**
  * add X times 0 to make 4 digit number

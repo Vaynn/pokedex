@@ -50,14 +50,17 @@ class MainActivity : ComponentActivity() {
         setContent {
             PokedexTheme {
                 val isLoading by splashViewModel.isLoading.collectAsState()
-                val  navController = rememberNavController()
+                val errorMessage by sharedViewModel.errorMessage.collectAsState()
+                val navController = rememberNavController()
                 val selectedColor by sharedViewModel.selectedPokemonColor
                 val currentDestination by navController.currentBackStackEntryAsState()
                 val showBackButton = rememberSaveable { mutableStateOf(false) }
 
                 LaunchedEffect(currentDestination) {
                     showBackButton.value = currentDestination?.destination?.route != NavRoutes.HOME
+                    println("Current destination: ${currentDestination?.destination?.route}, Show back button: ${showBackButton.value}")
                 }
+
                 if (isLoading){
                     SplashScreen()
                 } else {
@@ -74,7 +77,7 @@ class MainActivity : ComponentActivity() {
                             )
                         },
                         floatingActionButton = {
-                            if (!showBackButton.value) {
+                            if (errorMessage == null && !showBackButton.value ) {
                                 FloatingActionButton(
                                     onClick = { navController.navigate(NavRoutes.SEARCH) },
                                     containerColor = PokedexRed

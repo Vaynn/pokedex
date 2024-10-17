@@ -92,12 +92,14 @@ import com.example.pokedex.ui.theme.getPokemonBackgroundColor
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
+    sharedViewModel: PokemonSharedViewModel = hiltViewModel(),
     onPokemonClick: (Int, Brush) -> Unit,
     modifier: Modifier = Modifier
 ){
 
     val pokemonList by viewModel.pokemonList.collectAsState()
     val isLoading by viewModel.loading.collectAsState()
+    val errorMessage by viewModel.errorMessage.collectAsState()
     val regionByGeneration by viewModel.generationRegionMap.collectAsState()
     val selectedGeneration by viewModel.selectedGeneration.collectAsState()
     val gridState = rememberLazyGridState()
@@ -106,6 +108,43 @@ fun HomeScreen(
     }
     val hasReachedEnd by viewModel.hasReachedEnd.collectAsState()
     val isRegionFilterReady by viewModel.isRegionFilterReady.collectAsState()
+
+    LaunchedEffect(errorMessage) {
+        if (errorMessage != null) {
+            sharedViewModel.setError(errorMessage)
+        }
+        if (errorMessage == null) {
+            sharedViewModel.clearError()
+        }
+    }
+    if (errorMessage != null) {
+        Box(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(horizontal = 12.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(modifier =
+            Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center) {
+                Text(
+                    text = errorMessage ?: "Unknown Error",
+                    color = Color.Red,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                Image(
+                    painterResource(id = R.drawable.network_error),
+                    contentDescription = null,
+                    modifier = Modifier.size(100.dp)
+                )
+            }
+            
+        }
+        return
+    }
 
     if (!isRegionFilterReady) {
        LoadingPokeball()
@@ -230,7 +269,7 @@ fun PokeCard(
                                 Image(
                                     painter = rememberAsyncImagePainter(R.drawable.pokeball_loading),
                                     contentDescription = "Loading",
-                                    modifier = Modifier.size(50.dp) // Taille du placeholder
+                                    modifier = Modifier.size(50.dp)
                                 )
                             }
                         },

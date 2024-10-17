@@ -14,7 +14,7 @@ interface PokemonShortDao {
     @Query("SELECT * FROM pokemon_short_table")
     suspend fun getAllPokemonShort(): List<PokemonShortEntity>
 
-    @Query("SELECT COUNT(*) FROM pokemon_table")
+    @Query("SELECT COUNT(*) FROM pokemon_short_table")
     suspend fun getCount(): Int
 
     @Query("SELECT * FROM pokemon_short_table WHERE name LIKE '%' || :query || '%'")

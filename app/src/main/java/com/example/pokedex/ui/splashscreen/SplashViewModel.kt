@@ -25,9 +25,12 @@ class SplashViewModel @Inject constructor(
 
     private fun initializeDatabaseIfEmpty(){
         viewModelScope.launch {
+            println("initialize----------------")
             isLoading.value = true
             if (pokemonShortDao.getCount() == 0){
+                println("getCount() == 0---------------")
                 downloadAndStorePokemonData()
+
             }
             isLoading.value = false
         }
@@ -35,17 +38,23 @@ class SplashViewModel @Inject constructor(
     private suspend fun downloadAndStorePokemonData(){
         try {
             val response = apiService.getPokemonList(20000, 0)
-            val pokeList: MutableList<PokemonShortEntity> = mutableListOf()
-            response.body()?.results?.forEachIndexed { index, it ->
-                pokeList.add(
-                    PokemonShortEntity(
-                        id = index + 1,
-                        name = it.name,
-                        url = it.url
+            if (response.isSuccessful && response.body() != null) {
+                val pokeList: MutableList<PokemonShortEntity> = mutableListOf()
+                response.body()?.results?.forEachIndexed { index, it ->
+                    pokeList.add(
+                        PokemonShortEntity(
+                            id = index + 1,
+                            name = it.name,
+                            url = it.url
+                        )
                     )
-                )
+                }
+                pokemonShortDao.insertAll(pokeList)
+                val count = pokemonShortDao.getCount()
+                println("Inserted $count Pokémon")
+            } else {
+                println("API error: ${response.errorBody()?.string()}")
             }
-            pokemonShortDao.insertAll(pokeList)
         } catch (e: Exception) {
             println("ERROR downloading data : ${e.message}")
         }
